@@ -1,3 +1,5 @@
+<img width="1897" height="860" alt="dash_batman" src="https://github.com/user-attachments/assets/98581654-f337-40f2-82d5-f92147edf956" />
+
 # Wayne Industries Security Platform
 
 Plataforma de segurança corporativa com painel de controle, gestão de recursos, controle de acesso e monitoramento em tempo real.
