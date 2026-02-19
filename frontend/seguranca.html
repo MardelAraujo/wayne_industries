@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Segurança — Wayne Industries</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- ── SIDEBAR ────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-logo">
+        <img src="/Logo/Wayne_logo_mini.png" class="sidebar-logo-svg" alt="W" />
+        <div class="sidebar-logo-name">
+          <span class="sidebar-logo-title">WAYNE</span>
+          <span class="sidebar-logo-sub">INDUSTRIES</span>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="nav-section">Principal</span>
+      <a href="/dashboard.html" class="nav-link">
+        <span class="nav-icon"><i class="fas fa-th-large"></i></span> Dashboard
+      </a>
+      <a href="/recursos.html" class="nav-link">
+        <span class="nav-icon"><i class="fas fa-boxes"></i></span> Recursos
+      </a>
+      <span class="nav-section">Administração</span>
+      <a href="/usuarios.html" class="nav-link" data-min-role="gerente">
+        <span class="nav-icon"><i class="fas fa-users"></i></span> Usuários
+      </a>
+      <a href="/seguranca.html" class="nav-link">
+        <span class="nav-icon"><i class="fas fa-shield-alt"></i></span> Segurança
+      </a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sidebar-user-name">—</div>
+        <div class="sidebar-user-role" id="sidebar-user-role">—</div>
+      </div>
+      <button class="logout-btn" onclick="logout()">
+        <i class="fas fa-power-off"></i> SAIR DO SISTEMA
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ───────────────────────────────────────────── -->
+  <div class="main">
+    <header class="topbar">
+      <span class="topbar-title">
+        <i class="fas fa-shield-alt text-accent"></i>&nbsp; CONTROLE DE SEGURANÇA
+      </span>
+      <div class="topbar-right">
+        <div class="topbar-status"><span class="status-dot"></span> SISTEMA ONLINE</div>
+        <div class="topbar-user">
+          <span class="topbar-user-name" id="user-name">—</span>
+          <span class="topbar-user-role" id="user-role">—</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Áreas de Segurança -->
+      <div class="page-head" style="margin-bottom:16px">
+        <h1 class="page-title"><span>ÁREAS</span> DE SEGURANÇA</h1>
+        <button class="btn btn-secondary btn-sm" onclick="loadAreas()">
+          <i class="fas fa-sync-alt"></i>&nbsp; Atualizar
+        </button>
+      </div>
+
+      <div class="areas-grid" id="areas-grid">
+        <div style="padding:20px;color:var(--text-muted);font-size:.78rem">Carregando áreas...</div>
+      </div>
+
+      <!-- Log de Acessos -->
+      <div class="card mt-28">
+        <div class="card-head">
+          <span class="card-title">
+            <i class="fas fa-list-alt"></i>&nbsp; LOG DE TENTATIVAS DE ACESSO
+          </span>
+          <div class="d-flex gap-8">
+            <select id="log-filter" class="form-select" style="padding:5px 10px;font-size:.72rem" onchange="renderLogs()">
+              <option value="">Todos</option>
+              <option value="sucesso">Sucesso</option>
+              <option value="negado">Negado</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" onclick="loadLogs()">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Usuário</th>
+                <th>Ação</th>
+                <th>Status</th>
+                <th>IP</th>
+                <th>Detalhes</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="logs-tbody">
+              <tr><td colspan="7" class="text-center text-muted" style="padding:28px">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+</div><!-- /app-layout -->
+
+<script src="/js/main.js"></script>
+<script src="/js/seguranca.js"></script>
+</body>
+</html>

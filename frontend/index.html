@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wayne Industries — Acesso ao Sistema</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="login-page">
+
+  <!-- Boot screen -->
+  <div class="boot-screen" id="boot">
+    <img src="/Logo/Wayne_logo_mini.png" class="boot-logo" width="88" height="88" alt="Wayne Industries" />
+    <div class="boot-label">Inicializando sistema seguro...</div>
+    <div class="boot-bar"><div class="boot-bar-fill"></div></div>
+  </div>
+
+  <!-- Login -->
+  <div class="login-wrap">
+    <div class="login-header">
+      <img src="/Logo/wayne_logo.png" class="login-logo-full" alt="Wayne Industries" />
+      <div class="login-brand-sub" style="margin-top:10px">Plataforma de Segurança Corporativa</div>
+
+      <div class="terminal-line">
+        <span id="typing-out"></span>
+        <span class="terminal-cursor"></span>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <div class="login-card-eyebrow">
+        <i class="fas fa-lock"></i> &nbsp; AUTENTICAÇÃO REQUERIDA
+      </div>
+
+      <form id="login-form" onsubmit="handleLogin(event)" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="username">
+            <i class="fas fa-user"></i> Identificação
+          </label>
+          <input
+            type="text" id="username" class="form-input"
+            placeholder="username" autocomplete="username" required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">
+            <i class="fas fa-key"></i> Senha de acesso
+          </label>
+          <input
+            type="password" id="password" class="form-input"
+            placeholder="••••••••" autocomplete="current-password" required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="login-btn">
+          <i class="fas fa-shield-alt"></i>&nbsp; ACESSAR O SISTEMA
+        </button>
+
+        <div class="alert alert-error" id="login-err">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span id="login-err-msg">Credenciais inválidas. Acesso negado.</span>
+        </div>
+      </form>
+    </div>
+
+    <div class="login-footer-note">
+      © WAYNE INDUSTRIES &mdash; SISTEMA PROPRIETÁRIO &mdash; USO INTERNO
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script>
+    // ── Boot animation ────────────────────────────────────
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const boot = document.getElementById('boot');
+        boot.classList.add('fade-out');
+        setTimeout(() => boot.remove(), 520);
+      }, 1800);
+    });
+
+    // ── Typing effect ─────────────────────────────────────
+    const typingText = '> WAYNE INDUSTRIES v3.7.2 — SISTEMA SEGURO';
+    let   typingIdx  = 0;
+    const typingEl   = document.getElementById('typing-out');
+
+    function type() {
+      if (typingIdx < typingText.length) {
+        typingEl.textContent += typingText[typingIdx++];
+        setTimeout(type, 42);
+      }
+    }
+    setTimeout(type, 2000);
+
+    // ── Redirect if already logged in ────────────────────
+    (function () {
+      const tok = getToken();
+      if (tok && isTokenValid(tok)) window.location.href = '/dashboard.html';
+    })();
+
+    // ── Login handler ─────────────────────────────────────
+    async function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const btn      = document.getElementById('login-btn');
+      const errEl    = document.getElementById('login-err');
+      const errMsg   = document.getElementById('login-err-msg');
+
+      errEl.classList.remove('show');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; VERIFICANDO...';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          setToken(data.token);
+          setUser(data.user);
+          window.location.href = '/dashboard.html';
+        } else {
+          errMsg.textContent = data.error || 'Credenciais inválidas.';
+          errEl.classList.add('show');
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-shield-alt"></i>&nbsp; ACESSAR O SISTEMA';
+        }
+      } catch {
+        errMsg.textContent = 'Erro de conexão com o servidor.';
+        errEl.classList.add('show');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-shield-alt"></i>&nbsp; ACESSAR O SISTEMA';
+      }
+    }
+  </script>
+</body>
+</html>

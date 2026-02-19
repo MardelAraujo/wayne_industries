@@ -1,0 +1,87 @@
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# Distribuição / build
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+
+# ── Banco de dados ────────────────────────────────────────────
+backend/database.db
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Variáveis de ambiente / segredos ─────────────────────────
+.env
+.env.*
+!.env.example
+secrets.py
+config_local.py
+
+# ── IDEs e editores ───────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*~
+
+# ── Sistema operacional ───────────────────────────────────────
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+.directory
+
+# ── Logs ─────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Testes e cobertura ────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+coverage.xml
+
+# ── Claude Code (memória interna — não versionar) ────────────
+.claude/
+
+# ── Misc ─────────────────────────────────────────────────────
+*.bak
+*.tmp
+*.orig
+.cache/

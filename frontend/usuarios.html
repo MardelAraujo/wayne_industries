@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usuários — Wayne Industries</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- ── SIDEBAR ────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-logo">
+        <img src="/Logo/Wayne_logo_mini.png" class="sidebar-logo-svg" alt="W" />
+        <div class="sidebar-logo-name">
+          <span class="sidebar-logo-title">WAYNE</span>
+          <span class="sidebar-logo-sub">INDUSTRIES</span>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="nav-section">Principal</span>
+      <a href="/dashboard.html" class="nav-link">
+        <span class="nav-icon"><i class="fas fa-th-large"></i></span> Dashboard
+      </a>
+      <a href="/recursos.html" class="nav-link">
+        <span class="nav-icon"><i class="fas fa-boxes"></i></span> Recursos
+      </a>
+      <span class="nav-section">Administração</span>
+      <a href="/usuarios.html" class="nav-link" data-min-role="gerente">
+        <span class="nav-icon"><i class="fas fa-users"></i></span> Usuários
+      </a>
+      <a href="/seguranca.html" class="nav-link">
+        <span class="nav-icon"><i class="fas fa-shield-alt"></i></span> Segurança
+      </a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sidebar-user-name">—</div>
+        <div class="sidebar-user-role" id="sidebar-user-role">—</div>
+      </div>
+      <button class="logout-btn" onclick="logout()">
+        <i class="fas fa-power-off"></i> SAIR DO SISTEMA
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ───────────────────────────────────────────── -->
+  <div class="main">
+    <header class="topbar">
+      <span class="topbar-title">
+        <i class="fas fa-users text-accent"></i>&nbsp; GESTÃO DE USUÁRIOS
+      </span>
+      <div class="topbar-right">
+        <div class="topbar-status"><span class="status-dot"></span> SISTEMA ONLINE</div>
+        <div class="topbar-user">
+          <span class="topbar-user-name" id="user-name">—</span>
+          <span class="topbar-user-role" id="user-role">—</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="page-head">
+        <h1 class="page-title"><span>USUÁRIOS</span> DO SISTEMA</h1>
+        <button class="btn btn-primary" id="btn-add-user" onclick="openAdd()">
+          <i class="fas fa-user-plus"></i>&nbsp; NOVO USUÁRIO
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="filter-bar">
+          <input type="text" id="search" class="form-input" placeholder="Buscar usuários..." oninput="renderTable()" />
+          <select id="fil-role" class="form-select" onchange="renderTable()">
+            <option value="">Todos os Níveis</option>
+            <option value="admin">Administrador</option>
+            <option value="gerente">Gerente</option>
+            <option value="funcionario">Funcionário</option>
+          </select>
+          <select id="fil-status" class="form-select" onchange="renderTable()">
+            <option value="">Todos os Status</option>
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="loadUsuarios()">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Username</th>
+                <th>Cargo</th>
+                <th>Nível de Acesso</th>
+                <th>Status</th>
+                <th>Cadastrado em</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="usuarios-tbody">
+              <tr><td colspan="8" class="text-center text-muted" style="padding:28px">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL ADD/EDIT USER ───────────────────────────────── -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="modal-title">NOVO USUÁRIO</span>
+      <button class="modal-close" onclick="closeModal('modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="usr-id" />
+      <div class="form-group">
+        <label class="form-label">Nome completo *</label>
+        <input type="text" id="usr-nome" class="form-input" placeholder="Ex.: Alfred Pennyworth" />
+      </div>
+      <div class="form-group" id="username-group">
+        <label class="form-label">Username *</label>
+        <input type="text" id="usr-username" class="form-input" placeholder="Ex.: alfred" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cargo</label>
+        <input type="text" id="usr-cargo" class="form-input" placeholder="Ex.: Analista de Segurança" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nível de Acesso</label>
+        <select id="usr-role" class="form-select">
+          <option value="funcionario">Funcionário</option>
+          <option value="gerente">Gerente</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select id="usr-status" class="form-select">
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="pw-label">Senha *</label>
+        <input type="password" id="usr-password" class="form-input" placeholder="Mínimo 6 caracteres" />
+        <p style="font-size:.65rem;color:var(--text-muted);margin-top:5px" id="pw-hint"></p>
+      </div>
+      <div class="alert alert-error" id="modal-err">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="modal-err-msg">Erro ao salvar.</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modal')">CANCELAR</button>
+      <button class="btn btn-primary" onclick="saveUsuario()">
+        <i class="fas fa-save"></i>&nbsp; SALVAR
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL CONFIRM DELETE ──────────────────────────────── -->
+<div class="modal-bg" id="modal-del">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-head">
+      <span class="modal-title text-danger"><i class="fas fa-user-slash"></i>&nbsp; REMOVER USUÁRIO</span>
+      <button class="modal-close" onclick="closeModal('modal-del')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.82rem;color:var(--text-sec);line-height:1.7">
+        Deseja remover o usuário <strong id="del-nome" class="text-accent"></strong>?<br/>
+        Todos os dados associados serão perdidos.
+      </p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modal-del')">CANCELAR</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">
+        <i class="fas fa-user-slash"></i>&nbsp; REMOVER
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/main.js"></script>
+<script src="/js/usuarios.js"></script>
+</body>
+</html>

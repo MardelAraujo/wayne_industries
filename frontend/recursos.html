@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recursos — Wayne Industries</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- ── SIDEBAR ────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-logo">
+        <img src="/Logo/Wayne_logo_mini.png" class="sidebar-logo-svg" alt="W" />
+        <div class="sidebar-logo-name">
+          <span class="sidebar-logo-title">WAYNE</span>
+          <span class="sidebar-logo-sub">INDUSTRIES</span>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="nav-section">Principal</span>
+      <a href="/dashboard.html" class="nav-link">
+        <span class="nav-icon"><i class="fas fa-th-large"></i></span> Dashboard
+      </a>
+      <a href="/recursos.html" class="nav-link">
+        <span class="nav-icon"><i class="fas fa-boxes"></i></span> Recursos
+      </a>
+      <span class="nav-section">Administração</span>
+      <a href="/usuarios.html" class="nav-link" data-min-role="gerente">
+        <span class="nav-icon"><i class="fas fa-users"></i></span> Usuários
+      </a>
+      <a href="/seguranca.html" class="nav-link">
+        <span class="nav-icon"><i class="fas fa-shield-alt"></i></span> Segurança
+      </a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sidebar-user-name">—</div>
+        <div class="sidebar-user-role" id="sidebar-user-role">—</div>
+      </div>
+      <button class="logout-btn" onclick="logout()">
+        <i class="fas fa-power-off"></i> SAIR DO SISTEMA
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ───────────────────────────────────────────── -->
+  <div class="main">
+    <header class="topbar">
+      <span class="topbar-title">
+        <i class="fas fa-boxes text-accent"></i>&nbsp; GESTÃO DE RECURSOS
+      </span>
+      <div class="topbar-right">
+        <div class="topbar-status"><span class="status-dot"></span> SISTEMA ONLINE</div>
+        <div class="topbar-user">
+          <span class="topbar-user-name" id="user-name">—</span>
+          <span class="topbar-user-role" id="user-role">—</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="page-head">
+        <h1 class="page-title"><span>RECURSOS</span> CADASTRADOS</h1>
+        <button class="btn btn-primary" onclick="openAdd()">
+          <i class="fas fa-plus"></i>&nbsp; NOVO RECURSO
+        </button>
+      </div>
+
+      <div class="card">
+        <!-- Filters -->
+        <div class="filter-bar">
+          <input type="text" id="search" class="form-input" placeholder="&#xf002;  Buscar recursos..." oninput="renderTable()" />
+          <select id="fil-cat" class="form-select" onchange="renderTable()">
+            <option value="">Todas as Categorias</option>
+            <option>Veículo</option>
+            <option>Aeronave</option>
+            <option>TI</option>
+            <option>Equipamento</option>
+            <option>Infraestrutura</option>
+            <option>Segurança</option>
+          </select>
+          <select id="fil-status" class="form-select" onchange="renderTable()">
+            <option value="">Todos os Status</option>
+            <option value="ativo">Ativo</option>
+            <option value="manutencao">Em Manutenção</option>
+            <option value="inativo">Inativo</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="loadRecursos()">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+
+        <!-- Table -->
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Status</th>
+                <th>Localização</th>
+                <th>Cadastrado em</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="recursos-tbody">
+              <tr><td colspan="7" class="text-center text-muted" style="padding:28px">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL ADD/EDIT ────────────────────────────────────── -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="modal-title">NOVO RECURSO</span>
+      <button class="modal-close" onclick="closeModal('modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="rec-id" />
+      <div class="form-group">
+        <label class="form-label">Nome do recurso *</label>
+        <input type="text" id="rec-nome" class="form-input" placeholder="Ex.: Batmóvel MK-7" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Categoria *</label>
+        <select id="rec-cat" class="form-select">
+          <option value="">Selecionar...</option>
+          <option>Veículo</option>
+          <option>Aeronave</option>
+          <option>TI</option>
+          <option>Equipamento</option>
+          <option>Infraestrutura</option>
+          <option>Segurança</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select id="rec-status" class="form-select">
+          <option value="ativo">Ativo</option>
+          <option value="manutencao">Em Manutenção</option>
+          <option value="inativo">Inativo</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Localização</label>
+        <input type="text" id="rec-loc" class="form-input" placeholder="Ex.: Garagem B-1" />
+      </div>
+      <div class="alert alert-error" id="modal-err">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="modal-err-msg">Erro ao salvar.</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modal')">CANCELAR</button>
+      <button class="btn btn-primary" id="modal-save-btn" onclick="saveRecurso()">
+        <i class="fas fa-save"></i>&nbsp; SALVAR
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL CONFIRM DELETE ──────────────────────────────── -->
+<div class="modal-bg" id="modal-del">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-head">
+      <span class="modal-title text-danger"><i class="fas fa-trash-alt"></i>&nbsp; CONFIRMAR REMOÇÃO</span>
+      <button class="modal-close" onclick="closeModal('modal-del')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.82rem;color:var(--text-sec);line-height:1.7">
+        Deseja remover o recurso <strong id="del-nome" class="text-accent"></strong>?<br/>
+        Esta ação não pode ser desfeita.
+      </p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modal-del')">CANCELAR</button>
+      <button class="btn btn-danger" id="del-confirm-btn" onclick="confirmDelete()">
+        <i class="fas fa-trash-alt"></i>&nbsp; REMOVER
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/main.js"></script>
+<script src="/js/recursos.js"></script>
+</body>
+</html>
