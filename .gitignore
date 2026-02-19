@@ -77,8 +77,9 @@ htmlcov/
 .tox/
 coverage.xml
 
-# ── Claude Code (memória interna — não versionar) ────────────
+# ── Claude Code (memória e guias internos — não versionar) ───
 .claude/
+CLAUDE.md
 
 # ── Misc ─────────────────────────────────────────────────────
 *.bak
